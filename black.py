@@ -1,64 +1,162 @@
 import random
 
 dealer_cards = []
-card_face = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
+#card_face = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'] unused for now
 player_cards = []
-player_money = []
+player_money = 100
+player_bet = 0
+current_money = player_money - player_bet 
 
+game_select = str(input("Hello and welcome to Blackjack. Would you like to be a player or a dealer?  "))
+while True: #while loop to restart game on loss
 
-#setup game with money
-action_taken = str(input("Hello and welcome to Blackjack. Would you like to be a player or a dealer?  "))
-if action_taken == "player":
-    pass
-elif action_taken == "dealer":
-    pass
+    #setup game with money
 
-# deal cards 
-#dealer cards
-while len(dealer_cards) != 2:
-    dealer_cards.append(random.randint(1,11))
-    if len(dealer_cards) == 2:
-        print("Dealer has X and", dealer_cards[1]) #take index 1, to hide the first card
+    if game_select == "player":
+        
 
+        while True:
+            try:
+               # player_bet = int(input("Your current money is $" +str(current_money)+   ". How much would you like to bet?  "))
 
-#player cards
-while len(player_cards) != 2:
-    player_cards.append(random.randint(1,11))
-    if len(player_cards) == 2:
-        print("Your cards are: ", player_cards) 
+                player_bet = int(input("Your current money is $ {}".format(current_money)+ " How much would you like to bet? "))
+        
+                if player_bet > current_money:
+                    print("Insufficient money")
+                    continue
+                elif current_money == 0:
+                    print("You are out of money. Time to go home")
+                    exit()
 
+            except ValueError:
+                print("Not a number")
+            else:
+                current_money = current_money - player_bet 
+                print("Your bet is $", player_bet )
+                print("Your new total $",current_money)
+                break
 
-#sum the dealer cards
-while sum(dealer_cards) < 16:
-    dealer_cards.append(random.randint(1,11))
-if sum(dealer_cards) == 21:
-    print("Dealer has 21. House wins")
-elif sum(dealer_cards) > 21:
-    print("Dealer has busted")
+    elif game_select == ("dealer"):
+        print("Dont be silly.\n***************")
+        break
+     #       dealer_game = input("Hi Mr. Dealer! You have a player ready! Press 1 to deal cards")
+      #      if dealer_game == ('1'):
+       #          while len(dealer_cards) != 2:
+        #            dealer_cards.append(random.randint(1,11))
+         #           if len(dealer_cards) == 2:
+          #              print("You have:", dealer_cards)
 
+          
+        
 
+    # deal cards 
+    #dealer cards
+    while len(dealer_cards) != 1:
+        dealer_cards.append(random.randint(1,11))
+        if len(dealer_cards) == 1:
+            print("Dealer has X and", dealer_cards) #take index 1, to hide the first card
 
+            if sum(dealer_cards) > 21:
+                print("Dealer busted. You win!")
+                break
 
-#sum the player cards
-while sum(player_cards) < 21:
-    action_taken = str(input("Do you want to stay or hit?  " ))
-    if action_taken == "hit":
-        player_cards.append(random.randint(1,11))
-        print("You now have a total of " +str(sum(player_cards)) + " from these cards ", player_cards)
-    else:
-        print("The dealer has a total of " + str(sum(dealer_cards)) + " with ", dealer_cards)
-        print("You have a total of " +str(sum(player_cards)) + " with ", player_cards)
-        if sum(dealer_cards) > sum(player_cards):
-            print("Dealer wins")
-
-        else:
-            print("You win!")
+        elif len(dealer_cards) >1:
+            dealer_cards = []
+            dealer_cards.append(random.randint(1,11))
+            print("The dealer has a total of " + str(sum(dealer_cards)) + " with ", dealer_cards)
             break
             
 
 
-if sum(player_cards) > 21:
-    print("You busted! Dealer wins")
+    #player cards
+    while len(player_cards) != 2:
+        player_cards.append(random.randint(1,11))
 
-elif sum(player_cards) == 21:
-    print("You have blackjack! You win!")
+        if len(player_cards) == 2:
+            print("Your cards are: ", player_cards) 
+        
+        elif len(player_cards) >2:
+            player_cards = []
+            player_cards.append(random.randint(1,11)) 
+            player_cards.append(random.randint(1,11)) 
+            print("You now have a total of " +str(sum(player_cards)) + " from these cards ", player_cards)
+            break
+
+
+
+    #sum the dealer cards
+    while sum(dealer_cards) < 16:
+        dealer_cards.append(random.randint(1,11))
+
+
+        
+
+
+    #sum the player cards
+    while sum(player_cards) < 21:
+        #print("You now have a total of " +str(sum(player_cards)) + " from these cards ", player_cards)
+        action_taken = str(input("Do you want to stay or hit?  " ))
+    
+        
+        if action_taken == "hit":
+            player_cards.append(random.randint(1,11))
+            print("You now have a total of " +str(sum(player_cards)) + " from these cards ", player_cards)
+            
+        else:
+            print("The dealer has a total of " + str(sum(dealer_cards)) + " with ", dealer_cards)
+            print("You have a total of " +str(sum(player_cards)) + " with ", player_cards)
+
+
+            if sum(dealer_cards) > sum(player_cards) and sum(dealer_cards) <22:
+                print("Dealer wins")
+                break
+            elif sum(player_cards) > sum(dealer_cards) and sum (player_cards) <22:
+                print("You win $", player_bet*2)
+                current_money = player_bet*2 + current_money
+                break
+                
+
+            elif sum(dealer_cards) == sum(player_cards):
+                print("You have equal amount. Dealer wins!")
+                break
+
+            elif sum(dealer_cards) >21:
+                print("Congratulations! You win ", player_bet*2)
+                current_money = player_bet*2 + current_money
+                break
+                
+
+
+
+    if sum(player_cards) > 21:
+        print("The dealer has a total of " + str(sum(dealer_cards)) + " with ", dealer_cards)
+        print("You have a total of " +str(sum(player_cards)) + " with ", player_cards)
+        print("You busted! Dealer wins") #possibly find better way to deal with all these checks..
+        
+
+
+
+
+
+    elif sum(player_cards) == 21:
+        print("The dealer has a total of " + str(sum(dealer_cards)) + " with ", dealer_cards)
+        print("You have a total of " +str(sum(player_cards)) + " with ", player_cards)
+        print("You have blackjack! You win! ", player_bet*2)
+        current_money = player_bet*2 + current_money
+
+    elif sum(dealer_cards) == 21:
+        print("Dealer has 21. House wins")
+        
+
+    def player_win():
+        sum(dealer_cards) >21
+        
+
+    print("***************")
+    print("You now have $",current_money)
+    restart = input("GO AGANE? Y/N ")
+    if restart == 'n':
+        print("You left with $",current_money)
+        exit()
+    elif restart == 'y':
+        continue
